@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { decodeBase64, encodeBase64 } from '../base64-tools.js'
 
-const source = ref('Structura работает локально в вашем браузере.')
-const result = ref(encodeBase64(source.value))
+const source = ref('')
+const result = ref('')
 const error = ref('')
 const operation = ref('encode')
 const copied = ref(false)
@@ -36,7 +36,7 @@ async function copyResult() {
 <template>
   <section class="base64-tool" aria-labelledby="base64-title">
     <div class="tool-heading">
-      <div><p class="eyebrow">BASE64 CODEC</p><h1 id="base64-title">Кодируйте данные.<br><em>Возвращайте обратно.</em></h1></div>
+      <div><p class="eyebrow">BASE64 CODEC</p><h1 id="base64-title">Base64 <em>codec.</em></h1></div>
       <p>Корректная работа с UTF-8, кириллицей, emoji и URL-safe Base64 — полностью локально.</p>
     </div>
 

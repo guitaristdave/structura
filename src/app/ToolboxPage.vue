@@ -12,28 +12,18 @@ import PhpArrayConverter from '../features/php-array/components/PhpArrayConverte
 import TextDiffTool from '../features/text-diff/components/TextDiffTool.vue'
 import RegexTool from '../features/regex/components/RegexTool.vue'
 import UrlCleanerTool from '../features/url-cleaner/components/UrlCleanerTool.vue'
+import CodeEditor from '../shared/components/CodeEditor.vue'
 import ToastNotice from '../shared/components/ToastNotice.vue'
 import AppHeader from '../shared/layout/AppHeader.vue'
 import ToolNavigation from '../shared/layout/ToolNavigation.vue'
 
-const starterJson = `{
+const source = ref('')
+const jsonPlaceholder = `{
   "project": "Structura",
-  "status": "ready",
-  "features": [
-    "validation",
-    "formatting",
-    "smart repair"
-  ],
-  "settings": {
-    "indent": 2,
-    "liveValidation": true
-  }
+  "ready": true
 }`
-
-const source = ref(starterJson)
 const activeTool = ref('json')
 const editor = ref(null)
-const gutter = ref(null)
 const toast = ref('')
 const lastRepair = ref([])
 let toastTimer
@@ -92,11 +82,7 @@ function repair() {
 function jumpToError() {
   if (validation.value.valid || !editor.value) return
   const position = validation.value.offset
-  editor.value.focus()
-  editor.value.setSelectionRange(position, Math.min(position + 1, source.value.length))
-  const lineHeight = 24
-  editor.value.scrollTop = Math.max(0, (validation.value.line - 4) * lineHeight)
-  syncScroll()
+  editor.value.selectRange(position, Math.min(position + 1, source.value.length))
 }
 
 async function copyJson() {
@@ -105,7 +91,7 @@ async function copyJson() {
     await navigator.clipboard.writeText(source.value)
     announce('JSON скопирован')
   } catch {
-    editor.value?.select()
+    editor.value?.selectAll()
     document.execCommand('copy')
     announce('JSON скопирован')
   }
@@ -115,11 +101,6 @@ function clearEditor() {
   source.value = ''
   lastRepair.value = []
   nextTick(() => editor.value?.focus())
-}
-
-function syncScroll() {
-  if (!editor.value || !gutter.value) return
-  gutter.value.scrollTop = editor.value.scrollTop
 }
 
 function handleShortcut(event) {
@@ -157,26 +138,15 @@ function acceptConvertedJson(value) {
           />
 
           <div class="editor-frame" :class="{ 'has-error': !validation.valid && source.trim() }">
-            <div ref="gutter" class="line-gutter" aria-hidden="true">
-              <span
-                v-for="line in lineCount"
-                :key="line"
-                :class="{ 'error-line': !validation.valid && validation.line === line }"
-              >{{ line }}</span>
-            </div>
-            <textarea
+            <CodeEditor
               ref="editor"
               v-model="source"
+              language="json"
               aria-label="JSON"
-              aria-describedby="validation-message"
-              autocomplete="off"
-              autocapitalize="off"
-              spellcheck="false"
-              wrap="off"
-              @scroll="syncScroll"
+              :placeholder="jsonPlaceholder"
               @keydown="handleShortcut"
               @input="lastRepair = []"
-            ></textarea>
+            />
             <button v-if="source" type="button" class="clear-button" aria-label="Очистить редактор" @click="clearEditor">×</button>
           </div>
 
@@ -331,6 +301,7 @@ main {
 .tool-heading h1 {
   font-size: clamp(32px, 4.3vw, 50px) !important;
   line-height: 1.03 !important;
+  white-space: nowrap;
 }
 
 .intro,
@@ -473,18 +444,6 @@ h1 em {
   background: #101311;
 }
 
-.editor-frame::before {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  bottom: 0;
-  left: 56px;
-  width: 1px;
-  background: #252a27;
-  content: '';
-  pointer-events: none;
-}
-
 .editor-frame.has-error::after {
   position: absolute;
   z-index: 2;
@@ -495,33 +454,6 @@ h1 em {
   background: #f17868;
   content: '';
   opacity: 0.75;
-}
-
-.line-gutter {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  overflow: hidden;
-  width: 56px;
-  padding: 24px 0;
-  background: #121513;
-  color: #4f5751;
-  font: 12px/24px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  text-align: right;
-  user-select: none;
-}
-
-.line-gutter span {
-  display: block;
-  height: 24px;
-  padding-right: 16px;
-}
-
-.line-gutter .error-line {
-  color: #ff8b7c;
-  font-weight: 700;
 }
 
 textarea {
@@ -839,16 +771,11 @@ html[data-theme='light'] .pane-title {
 }
 
 html[data-theme='light'] .editor-frame,
-html[data-theme='light'] .line-gutter,
 html[data-theme='light'] .converter-pane,
 html[data-theme='light'] .converter-textarea,
 html[data-theme='light'] .diff-textarea,
 html[data-theme='light'] .diff-content {
   background: #ffffff !important;
-}
-
-html[data-theme='light'] .editor-frame::before {
-  background: #e0e4dc;
 }
 
 html[data-theme='light'] textarea,
@@ -861,10 +788,6 @@ html[data-theme='light'] .diff-content {
 
 html[data-theme='light'] textarea::selection {
   background: rgba(95, 145, 61, 0.2);
-}
-
-html[data-theme='light'] .line-gutter {
-  color: #a0a8a0;
 }
 
 html[data-theme='light'] .tool-button {
@@ -1194,7 +1117,7 @@ html[data-theme='light'] .result-box code {
   .diff-tool h1,
   .converter-section h2,
   .tool-heading h1 {
-    font-size: clamp(30px, 9vw, 42px) !important;
+    font-size: clamp(25px, 8vw, 38px) !important;
   }
 
   .intro {
@@ -1234,12 +1157,6 @@ html[data-theme='light'] .result-box code {
 
   .editor-frame {
     height: 400px;
-  }
-
-  textarea {
-    padding-right: 42px;
-    padding-left: 70px;
-    font-size: 12px;
   }
 
   .workspace-footer {

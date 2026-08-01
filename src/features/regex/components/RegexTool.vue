@@ -2,9 +2,9 @@
 import { computed, ref } from 'vue'
 import { testRegex } from '../regex-tools.js'
 
-const pattern = ref('(?:https?:\\/\\/)?([\\w.-]+)')
-const flags = ref('gi')
-const testText = ref('Документация: https://example.com/docs\nЗеркало: www.example.org')
+const pattern = ref('')
+const flags = ref('')
+const testText = ref('')
 const result = ref(null)
 
 const matchCount = computed(() => result.value?.valid ? result.value.matches.length : 0)
@@ -19,19 +19,18 @@ function toggleFlag(flag) {
     : `${flags.value}${flag}`
 }
 
-runTest()
 </script>
 
 <template>
   <section class="regex-tool" aria-labelledby="regex-title">
     <div class="tool-heading">
-      <div><p class="eyebrow">REGEX TESTER</p><h1 id="regex-title">Проверяйте паттерны.<br><em>Видите совпадения.</em></h1></div>
+      <div><p class="eyebrow">REGEX TESTER</p><h1 id="regex-title">Regex <em>tester.</em></h1></div>
       <p>Тестируйте JavaScript-регулярные выражения и сразу находите все совпадения в тексте.</p>
     </div>
 
     <div class="regex-card">
       <div class="pattern-row">
-        <label><span>Регулярное выражение</span><div class="pattern-input"><b>/</b><input v-model="pattern" type="text" spellcheck="false" @keydown.enter="runTest"><b>/</b><input v-model="flags" class="flags-input" aria-label="Флаги регулярного выражения" maxlength="7" @keydown.enter="runTest"></div></label>
+        <label><span>Регулярное выражение</span><div class="pattern-input"><b>/</b><input v-model="pattern" type="text" spellcheck="false" placeholder="[a-z]+" @keydown.enter="runTest"><b>/</b><input v-model="flags" class="flags-input" aria-label="Флаги регулярного выражения" placeholder="gi" maxlength="7" @keydown.enter="runTest"></div></label>
         <div class="flag-switches" aria-label="Популярные флаги">
           <button v-for="flag in ['g','i','m','s','u']" :key="flag" type="button" :class="{ active: flags.includes(flag) }" @click="toggleFlag(flag)">{{ flag }}</button>
         </div>
@@ -41,7 +40,7 @@ runTest()
       <div class="regex-columns">
         <div class="regex-pane">
           <header><span>Тестовый текст</span><small>{{ testText.length }} симв.</small></header>
-          <textarea v-model="testText" spellcheck="false" aria-label="Текст для проверки регулярного выражения" @input="result = null"></textarea>
+          <textarea v-model="testText" spellcheck="false" aria-label="Текст для проверки регулярного выражения" placeholder="Введите текст для проверки…" @input="result = null"></textarea>
         </div>
         <div class="regex-pane result-pane">
           <header><span>Результат</span><small v-if="result?.valid">{{ matchCount }} совпадений</small></header>

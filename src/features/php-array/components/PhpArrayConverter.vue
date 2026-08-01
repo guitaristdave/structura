@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import CodeEditor from '../../../shared/components/CodeEditor.vue'
 import { inspectJson } from '../../json/json-tools.js'
 import { jsonToPhp, phpToJson } from '../php-array-tools.js'
 
@@ -9,9 +10,17 @@ const props = defineProps({
 
 const emit = defineEmits(['send-json'])
 
-const jsonInput = ref(props.currentJson)
-const initialPhp = jsonToPhp(props.currentJson)
-const phpInput = ref(initialPhp.valid ? initialPhp.output : '')
+const jsonInput = ref('')
+const phpInput = ref('')
+const jsonPlaceholder = `{
+  "name": "Structura",
+  "enabled": true
+}`
+const phpPlaceholder = `<?php
+
+return [
+  'name' => 'Structura',
+];`
 const jsonError = ref('')
 const phpError = ref('')
 const message = ref('')
@@ -98,16 +107,15 @@ async function copy(value, label) {
             <button type="button" @click="copy(jsonInput, 'JSON')">Копировать</button>
           </div>
         </div>
-        <textarea
+        <CodeEditor
           v-model="jsonInput"
           class="converter-textarea"
+          language="json"
+          line-wrapping
           aria-label="JSON для конвертации"
-          autocomplete="off"
-          autocapitalize="off"
-          spellcheck="false"
-          wrap="off"
+          :placeholder="jsonPlaceholder"
           @input="jsonError = ''"
-        ></textarea>
+        />
         <div class="pane-footer">
           <span v-if="jsonError" class="converter-error">{{ jsonError }}</span>
           <button type="button" class="send-button" @click="sendToEditor">В основной редактор ↑</button>
@@ -117,10 +125,10 @@ async function copy(value, label) {
       <div class="converter-controls" aria-label="Направление конвертации">
         <button type="button" @click="convertToPhp">
           <span>JSON → PHP</span>
-          <b aria-hidden="true">→</b>
+          <b aria-hidden="true">↓</b>
         </button>
         <button type="button" @click="convertToJson">
-          <b aria-hidden="true">←</b>
+          <b aria-hidden="true">↑</b>
           <span>PHP → JSON</span>
         </button>
       </div>
@@ -132,16 +140,15 @@ async function copy(value, label) {
             <button type="button" @click="copy(phpInput, 'PHP-массив')">Копировать</button>
           </div>
         </div>
-        <textarea
+        <CodeEditor
           v-model="phpInput"
           class="converter-textarea"
+          language="php"
+          line-wrapping
           aria-label="PHP-массив для конвертации"
-          autocomplete="off"
-          autocapitalize="off"
-          spellcheck="false"
-          wrap="off"
+          :placeholder="phpPlaceholder"
           @input="phpError = ''"
-        ></textarea>
+        />
         <div class="pane-footer php-footer">
           <span v-if="phpError" class="converter-error">{{ phpError }}</span>
           <span v-else>Поддерживаются <code>[]</code> и <code>array()</code></span>
@@ -202,7 +209,7 @@ h2 span {
 
 .converter-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 112px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   border: 1px solid #2a302c;
   background: #131614;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
@@ -214,11 +221,11 @@ h2 span {
 }
 
 .converter-pane:first-child {
-  border-right: 1px solid #292e2b;
+  border-bottom: 0;
 }
 
 .converter-pane:last-child {
-  border-left: 1px solid #292e2b;
+  border-top: 0;
 }
 
 .pane-error {
@@ -294,20 +301,7 @@ h2 span {
 }
 
 .converter-textarea {
-  position: static;
-  display: block;
-  width: 100%;
   height: 330px;
-  resize: vertical;
-  border: 0;
-  outline: 0;
-  padding: 20px;
-  background: #101311;
-  color: #d9e0db;
-  caret-color: #b9f489;
-  font: 12px/21px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  tab-size: 2;
-  white-space: pre;
 }
 
 .pane-footer {
@@ -343,18 +337,23 @@ h2 span {
 
 .converter-controls {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 9px;
   align-items: stretch;
   justify-content: center;
   padding: 12px;
+  border-top: 1px solid #292e2b;
+  border-bottom: 1px solid #292e2b;
   background: #151816;
 }
 
 .converter-controls button {
-  display: grid;
-  min-height: 74px;
-  place-items: center;
+  display: flex;
+  min-height: 50px;
+  flex: 1;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #2d342f;
   background: #1b201c;
   color: #8d978f;
@@ -423,14 +422,10 @@ h2 span {
 
   .converter-controls {
     flex-direction: row;
-    border-top: 1px solid #292e2b;
-    border-bottom: 1px solid #292e2b;
   }
 
   .converter-controls button {
     min-height: 48px;
-    flex: 1;
-    grid-auto-flow: column;
   }
 
   .converter-textarea {

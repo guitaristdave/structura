@@ -2,7 +2,6 @@
 import { computed, onUnmounted, ref } from 'vue'
 import {
   dateTimeToTimestamp,
-  formatDateTimeLocal,
   generatePassword,
   generateToken,
   generateUuidV4,
@@ -16,8 +15,8 @@ const passwordLength = ref(20)
 const password = ref(generatePassword(passwordLength.value))
 const timestamps = ref(getTimestamps())
 const copied = ref('')
-const timestampInput = ref(String(timestamps.value.seconds))
-const dateTimeInput = ref(formatDateTimeLocal(new Date()))
+const timestampInput = ref('')
+const dateTimeInput = ref('')
 let copiedTimer
 
 const timestampResult = computed(() => {
@@ -64,7 +63,7 @@ function refreshPassword() {
     <div class="tool-heading">
       <div>
         <p class="eyebrow">QUICK GENERATORS</p>
-        <h1 id="generators-title">Нужные значения.<br><em>Без лишних действий.</em></h1>
+        <h1 id="generators-title">Генераторы <em>значений.</em></h1>
       </div>
       <p>UUID, временные метки и безопасные случайные значения генерируются локально в вашем браузере.</p>
     </div>
@@ -125,10 +124,10 @@ function refreshPassword() {
         <div class="conversion-pane">
           <label for="timestamp-input">Timestamp → datetime</label>
           <div class="conversion-input">
-            <input id="timestamp-input" v-model="timestampInput" type="text" inputmode="numeric" spellcheck="false">
+            <input id="timestamp-input" v-model="timestampInput" type="text" inputmode="numeric" spellcheck="false" placeholder="1722513600">
             <span>{{ timestampInput.length >= 12 ? 'MS' : 'SEC' }}</span>
           </div>
-          <div v-if="timestampResult.valid" class="conversion-results">
+          <div v-if="timestampInput && timestampResult.valid" class="conversion-results">
             <button type="button" @click="copy(timestampResult.local, 'Локальная дата')">
               <span>LOCAL TIME</span><code>{{ timestampResult.local }}</code>
             </button>
@@ -136,7 +135,7 @@ function refreshPassword() {
               <span>UTC · ISO 8601</span><code>{{ timestampResult.iso }}</code>
             </button>
           </div>
-          <p v-else class="conversion-error">{{ timestampResult.error }}</p>
+          <p v-else-if="timestampInput" class="conversion-error">{{ timestampResult.error }}</p>
         </div>
 
         <div class="conversion-direction" aria-hidden="true">⇄</div>
@@ -147,7 +146,7 @@ function refreshPassword() {
             <input id="datetime-input" v-model="dateTimeInput" type="datetime-local" step="1">
             <span>LOCAL</span>
           </div>
-          <div v-if="dateTimeResult.valid" class="conversion-results">
+          <div v-if="dateTimeInput && dateTimeResult.valid" class="conversion-results">
             <button type="button" @click="copy(dateTimeResult.seconds, 'Timestamp sec')">
               <span>SECONDS</span><code>{{ dateTimeResult.seconds }}</code>
             </button>
@@ -155,7 +154,7 @@ function refreshPassword() {
               <span>MILLISECONDS</span><code>{{ dateTimeResult.milliseconds }}</code>
             </button>
           </div>
-          <p v-else class="conversion-error">{{ dateTimeResult.error }}</p>
+          <p v-else-if="dateTimeInput" class="conversion-error">{{ dateTimeResult.error }}</p>
         </div>
       </div>
     </section>
@@ -182,29 +181,28 @@ h1 { margin: 0; color: #f2f5f2; font-size: clamp(42px, 6vw, 68px); font-weight: 
 h1 em { color: #8e9690; font-family: Georgia, serif; font-weight: 400; letter-spacing: -0.045em; }
 .tool-heading > p { max-width: 330px; margin: 0 0 3px; color: #909792; font-size: 15px; line-height: 1.65; }
 
-.generator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.generator-card { min-width: 0; border: 1px solid #2a302c; background: #111412; box-shadow: 0 18px 55px rgba(0, 0, 0, 0.15); }
-.generator-card header { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; min-height: 58px; padding: 0 16px; border-bottom: 1px solid #292e2b; background: #171a18; }
+.generator-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.generator-card { display: grid; min-width: 0; grid-template-rows: auto minmax(128px, 1fr) auto; border: 1px solid #2a302c; background: #111412; box-shadow: 0 18px 55px rgba(0, 0, 0, 0.15); }
+.generator-card header { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 3px 7px; align-content: center; min-height: 62px; padding: 8px 14px; border-bottom: 1px solid #292e2b; background: #171a18; }
 .generator-card header span { font: 9px/1 ui-monospace, monospace; }
 .generator-card header strong { color: #d9dfda; font-size: 12px; }
-.generator-card header small { color: #59615b; font: 9px/1 ui-monospace, monospace; }
-.generator-card > code { display: flex; min-height: 128px; align-items: center; padding: 22px; color: #dce3dd; font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
-.generator-card .wrap-value { overflow-wrap: anywhere; }
-.generator-card footer { display: flex; min-height: 52px; align-items: center; justify-content: flex-end; gap: 6px; padding: 8px 12px; border-top: 1px solid #292e2b; background: #171a18; color: #626b64; font-size: 10px; }
-.generator-card footer button { min-height: 32px; border: 1px solid #303631; padding: 0 11px; background: #1e231f; color: #aeb6b0; cursor: pointer; font-size: 10px; font-weight: 650; }
+.generator-card header small { grid-column: 2; color: #59615b; font: 8px/1 ui-monospace, monospace; }
+.generator-card > code { display: flex; min-width: 0; min-height: 128px; align-items: center; overflow-wrap: anywhere; padding: 18px; color: #dce3dd; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.generator-card footer { display: flex; min-height: 58px; flex-wrap: wrap; align-content: center; align-items: center; justify-content: flex-end; gap: 5px; padding: 8px 10px; border-top: 1px solid #292e2b; background: #171a18; color: #626b64; font-size: 10px; }
+.generator-card footer button { min-width: 0; min-height: 32px; flex: 1; border: 1px solid #303631; padding: 0 8px; background: #1e231f; color: #aeb6b0; cursor: pointer; font-size: 9px; font-weight: 650; white-space: nowrap; }
 .generator-card footer button:hover { border-color: #4b574e; color: #eff3ef; }
-.generator-card footer label { display: flex; gap: 6px; align-items: center; margin-right: auto; color: #687169; }
+.generator-card footer label { display: flex; width: 100%; gap: 6px; align-items: center; justify-content: space-between; color: #687169; }
 .generator-card footer input { width: 50px; border: 1px solid #303631; padding: 6px; background: #111412; color: #cfd6d0; font: 11px ui-monospace, monospace; }
 .accent-green header > span { color: #a8e779; }
 .accent-blue header > span { color: #80c8ff; }
 .accent-violet header > span { color: #c59cff; }
 .accent-coral header > span { color: #ff9486; }
 
-.timestamp-list { display: grid; min-height: 128px; align-content: center; padding: 12px 20px; }
-.timestamp-list button { display: grid; grid-template-columns: 92px 1fr; gap: 10px; border: 0; padding: 7px 0; background: transparent; color: inherit; cursor: pointer; text-align: left; }
+.timestamp-list { display: grid; min-height: 128px; align-content: center; padding: 12px 14px; }
+.timestamp-list button { display: grid; min-width: 0; grid-template-columns: 68px minmax(0, 1fr); gap: 8px; border: 0; padding: 7px 0; background: transparent; color: inherit; cursor: pointer; text-align: left; }
 .timestamp-list button:hover code { color: #b9f489; }
-.timestamp-list span { color: #5e675f; font: 9px/1.5 ui-monospace, monospace; }
-.timestamp-list code { overflow: hidden; color: #cfd6d0; font: 11px/1.4 ui-monospace, monospace; text-overflow: ellipsis; }
+.timestamp-list span { color: #5e675f; font: 8px/1.5 ui-monospace, monospace; }
+.timestamp-list code { overflow: hidden; color: #cfd6d0; font: 10px/1.4 ui-monospace, monospace; text-overflow: ellipsis; }
 
 .timestamp-converter { margin-top: 14px; border: 1px solid #2a302c; background: #111412; box-shadow: 0 18px 55px rgba(0, 0, 0, 0.15); }
 .timestamp-converter > header { display: flex; min-height: 58px; align-items: center; justify-content: space-between; padding: 0 18px; border-bottom: 1px solid #292e2b; background: #171a18; }
@@ -229,9 +227,24 @@ h1 em { color: #8e9690; font-family: Georgia, serif; font-weight: 400; letter-sp
 @media (max-width: 760px) {
   .tool-heading { grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px; }
   h1 { font-size: clamp(38px, 12vw, 56px); }
-  .generator-grid { grid-template-columns: 1fr; }
   .timestamp-converter > header small { display: none; }
   .conversion-grid { grid-template-columns: 1fr; }
   .conversion-direction { min-height: 36px; border-block: 1px solid #292e2b; border-inline: 0; }
+}
+
+@media (max-width: 900px) {
+  .generator-grid {
+    grid-template-columns: none;
+    grid-auto-columns: minmax(270px, 78vw);
+    grid-auto-flow: column;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+  }
+
+  .generator-card {
+    scroll-snap-align: start;
+  }
 }
 </style>

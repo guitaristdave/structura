@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { removeBackslashes } from '../url-cleaner.js'
 
-const source = ref('https:/\\/\\www.example.com/\\something')
+const source = ref('')
 const result = computed(() => removeBackslashes(source.value))
 const removedCount = computed(() => (source.value.match(/\\/g) ?? []).length)
 const copied = ref(false)
@@ -18,7 +18,7 @@ async function copyResult() {
 <template>
   <section class="url-tool" aria-labelledby="url-title">
     <div class="tool-heading">
-      <div><p class="eyebrow">URL CLEANER</p><h1 id="url-title">Уберите экранирование.<br><em>Получите чистую ссылку.</em></h1></div>
+      <div><p class="eyebrow">URL CLEANER</p><h1 id="url-title">Очистка <em>ссылок.</em></h1></div>
       <p>Удаляет обратные слеши <code>\</code> из ссылок, скопированных из JSON, логов или исходного кода.</p>
     </div>
 

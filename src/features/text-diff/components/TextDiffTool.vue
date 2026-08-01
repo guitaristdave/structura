@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { compareText } from '../text-diff.js'
 
-const leftText = ref('Structura проверяет данные,\nформатирует JSON и исправляет ошибки.')
-const rightText = ref('Structura быстро проверяет данные,\nформатирует код и подсвечивает ошибки.')
+const leftText = ref('')
+const rightText = ref('')
 const comparison = ref(null)
 
 function compare() {
@@ -29,7 +29,7 @@ function swap() {
     <div class="diff-heading">
       <div>
         <p class="diff-eyebrow">TEXT DIFF</p>
-        <h1 id="diff-title">Найдите каждое<br><em>важное отличие.</em></h1>
+        <h1 id="diff-title">Сравнение <em>текстов.</em></h1>
       </div>
       <p>Сравните два текстовых фрагмента — добавленные и удалённые части будут подсвечены отдельно.</p>
     </div>
