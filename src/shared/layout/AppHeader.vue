@@ -7,13 +7,16 @@ const { theme, toggleTheme } = useTheme()
 <template>
   <header class="topbar">
     <a class="brand" href="#" aria-label="Structura — на главную">
-      <span class="brand-mark" aria-hidden="true">{ }</span>
-      <span>Struct<span>ura</span></span>
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+      <span class="brand-copy">
+        <strong>Structura</strong>
+        <small>Developer toolkit</small>
+      </span>
     </a>
     <div class="header-actions">
       <div class="privacy-note">
         <span class="privacy-dot" aria-hidden="true"></span>
-        Работает локально в браузере
+        <span>Данные остаются на устройстве</span>
       </div>
       <button
         type="button"
@@ -23,9 +26,9 @@ const { theme, toggleTheme } = useTheme()
         :aria-pressed="theme === 'light'"
         @click="toggleTheme"
       >
-        <span aria-hidden="true">◐</span>
-        <i aria-hidden="true"><b></b></i>
-        <span aria-hidden="true">☼</span>
+        <span class="theme-icon" aria-hidden="true">☾</span>
+        <i class="theme-track" aria-hidden="true"><b></b></i>
+        <span class="theme-icon" aria-hidden="true">☼</span>
       </button>
     </div>
   </header>

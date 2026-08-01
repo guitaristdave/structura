@@ -6,18 +6,19 @@ defineProps({
 defineEmits(['update:modelValue'])
 
 const tools = [
-  { id: 'json', number: '01', label: 'JSON валидатор' },
-  { id: 'php', number: '02', label: 'JSON ↔ PHP' },
-  { id: 'diff', number: '03', label: 'Сравнение текста' },
-  { id: 'generators', number: '04', label: 'Генераторы' },
-  { id: 'base64', number: '05', label: 'Base64' },
-  { id: 'regex', number: '06', label: 'Regex' },
-  { id: 'url', number: '07', label: 'URL cleaner' },
+  { id: 'json', glyph: '{ }', label: 'JSON редактор', hint: 'Проверка и форматирование' },
+  { id: 'php', glyph: '↔', label: 'JSON ↔ PHP', hint: 'Конвертер массивов' },
+  { id: 'diff', glyph: '≠', label: 'Сравнение текста', hint: 'Поиск различий' },
+  { id: 'generators', glyph: '✦', label: 'Генераторы', hint: 'UUID, токены, timestamp' },
+  { id: 'base64', glyph: '64', label: 'Base64', hint: 'Кодирование данных' },
+  { id: 'regex', glyph: '.*', label: 'Regex tester', hint: 'Проверка выражений' },
+  { id: 'url', glyph: '↗', label: 'URL cleaner', hint: 'Очистка ссылок' },
 ]
 </script>
 
 <template>
   <nav class="tool-navigation" aria-label="Инструменты">
+    <div class="navigation-label">Инструменты</div>
     <button
       v-for="tool in tools"
       :key="tool.id"
@@ -26,9 +27,17 @@ const tools = [
       :aria-current="modelValue === tool.id ? 'page' : undefined"
       @click="$emit('update:modelValue', tool.id)"
     >
-      <span>{{ tool.number }}</span>
-      {{ tool.label }}
+      <span class="tool-glyph" aria-hidden="true">{{ tool.glyph }}</span>
+      <span class="tool-copy">
+        <strong>{{ tool.label }}</strong>
+        <small>{{ tool.hint }}</small>
+      </span>
+      <span class="active-chevron" aria-hidden="true">›</span>
     </button>
+    <div class="navigation-footer">
+      <span class="privacy-dot" aria-hidden="true"></span>
+      <div><strong>Local-first</strong><small>Без передачи данных</small></div>
+    </div>
   </nav>
 </template>
 

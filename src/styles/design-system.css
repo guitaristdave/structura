@@ -1,0 +1,565 @@
+/* Structura 2026 design system — shared tokens and component surfaces. */
+:root {
+  color-scheme: dark;
+  --bg: #080b0f;
+  --bg-elevated: #0d1117;
+  --surface: rgba(17, 22, 29, 0.92);
+  --surface-strong: #131922;
+  --surface-soft: #0f141b;
+  --surface-hover: #19212b;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.13);
+  --text: #f5f7fa;
+  --text-soft: #c8d0da;
+  --muted: #8b96a5;
+  --muted-dim: #5f6977;
+  --accent: #b9f67d;
+  --accent-strong: #9fe85f;
+  --accent-ink: #10180a;
+  --danger: #ff8174;
+  --info: #79c6ff;
+  --violet: #b8a0ff;
+  --teal: #6edbc5;
+  --orange: #ffb86b;
+  --pink: #ff91a7;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --shadow-card: 0 1px 0 rgba(255,255,255,.035) inset, 0 24px 70px rgba(0,0,0,.34);
+  --shadow-float: 0 18px 55px rgba(0,0,0,.42);
+  --font-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+  color: var(--text);
+  background: var(--bg);
+  font-family: var(--font-sans);
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f4f6f8;
+  --bg-elevated: #eef1f4;
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-strong: #ffffff;
+  --surface-soft: #f7f9fb;
+  --surface-hover: #f0f3f6;
+  --border: rgba(25, 35, 48, 0.09);
+  --border-strong: rgba(25, 35, 48, 0.15);
+  --text: #111821;
+  --text-soft: #34404e;
+  --muted: #667281;
+  --muted-dim: #8d98a4;
+  --accent: #72ad3e;
+  --accent-strong: #5d9630;
+  --accent-ink: #ffffff;
+  --danger: #d95649;
+  --shadow-card: 0 1px 0 rgba(255,255,255,.8) inset, 0 20px 55px rgba(34,48,66,.09);
+  --shadow-float: 0 18px 45px rgba(34,48,66,.16);
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; scroll-behavior: smooth; background: var(--bg) !important; }
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 76% -12%, rgba(132, 218, 105, .11), transparent 34rem),
+    radial-gradient(circle at 36% 26%, rgba(82, 125, 255, .045), transparent 28rem),
+    var(--bg) !important;
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, textarea, input { font: inherit; }
+button { color: inherit; }
+button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, textarea:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 82%, white) !important;
+  outline-offset: 3px !important;
+}
+
+::selection { background: color-mix(in srgb, var(--accent) 24%, transparent); }
+
+.app-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 256px minmax(0, 1fr);
+  grid-template-rows: 76px minmax(0, 1fr);
+}
+
+.app-shell .topbar {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  display: flex;
+  width: auto;
+  height: 76px;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(20px) saturate(135%);
+}
+
+.app-shell .brand {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--text) !important;
+  text-decoration: none;
+}
+
+.app-shell .brand-mark {
+  position: relative;
+  display: block;
+  width: 34px;
+  height: 34px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(185,246,125,.16), rgba(185,246,125,.035));
+  box-shadow: 0 1px 0 rgba(255,255,255,.08) inset, 0 10px 30px rgba(122,191,70,.08);
+}
+
+.app-shell .brand-mark i {
+  position: absolute;
+  top: 9px;
+  width: 7px;
+  height: 15px;
+  border: 1.5px solid var(--accent);
+}
+.app-shell .brand-mark i:first-child { left: 8px; border-right: 0; border-radius: 4px 0 0 4px; }
+.app-shell .brand-mark i:last-child { right: 8px; border-left: 0; border-radius: 0 4px 4px 0; }
+
+.brand-copy { display: grid; gap: 1px; }
+.brand-copy strong { font-size: 16px; font-weight: 720; letter-spacing: -.025em; }
+.brand-copy small { color: var(--muted); font-size: 9px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+
+.app-shell .header-actions { display: flex; gap: 18px; align-items: center; }
+.app-shell .privacy-note {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-strong) 72%, transparent);
+  color: var(--muted) !important;
+  font-size: 11px;
+  font-weight: 570;
+}
+.app-shell .privacy-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 11%, transparent); }
+
+.app-shell .theme-toggle {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 6px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 999px;
+  background: var(--surface-soft) !important;
+  color: var(--muted) !important;
+  transition: border-color .2s ease, background .2s ease;
+}
+.app-shell .theme-toggle:hover { border-color: var(--border-strong) !important; background: var(--surface-hover) !important; color: var(--text-soft) !important; }
+.app-shell .theme-toggle .theme-icon { width: 13px; font: 12px/1 var(--font-sans); text-align: center; }
+.app-shell .theme-toggle .theme-track { width: 32px; height: 17px; border: 0; border-radius: 999px; background: var(--bg-elevated); box-shadow: 0 0 0 1px var(--border-strong) inset; }
+.app-shell .theme-toggle b { top: 3px; left: 3px; width: 11px; height: 11px; background: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,.28); }
+.app-shell .theme-toggle.light b { transform: translateX(15px); }
+
+.app-shell .tool-navigation {
+  position: sticky;
+  top: 76px;
+  display: flex;
+  width: auto;
+  height: calc(100vh - 76px);
+  min-height: 0;
+  flex-direction: column;
+  align-self: start;
+  gap: 4px;
+  margin: 0;
+  overflow: hidden auto;
+  padding: 26px 16px 18px;
+  border-right: 1px solid var(--border);
+  border-bottom: 0;
+  background: color-mix(in srgb, var(--bg-elevated) 55%, transparent);
+}
+
+.navigation-label {
+  margin: 0 10px 10px;
+  color: var(--muted-dim);
+  font-size: 10px;
+  font-weight: 720;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.app-shell .tool-navigation > button {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 58px;
+  flex: 0 0 auto;
+  grid-template-columns: 32px minmax(0, 1fr) 12px;
+  gap: 10px;
+  align-items: center;
+  justify-content: stretch;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: left;
+  transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.app-shell .tool-navigation > button::after { display: none; }
+.app-shell .tool-navigation > button:hover { border-color: var(--border); background: color-mix(in srgb, var(--surface-hover) 64%, transparent); color: var(--text-soft); transform: translateX(2px); }
+.app-shell .tool-navigation > button.active {
+  border-color: color-mix(in srgb, var(--accent) 16%, var(--border));
+  background: linear-gradient(100deg, color-mix(in srgb, var(--accent) 11%, var(--surface-strong)), var(--surface-strong));
+  color: var(--text);
+  box-shadow: 0 1px 0 rgba(255,255,255,.035) inset, 0 8px 30px rgba(0,0,0,.12);
+}
+.app-shell .tool-glyph {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font: 650 10px/1 var(--font-mono);
+  letter-spacing: -.05em;
+}
+.app-shell .tool-navigation > button.active .tool-glyph { border-color: color-mix(in srgb, var(--accent) 24%, var(--border)); background: color-mix(in srgb, var(--accent) 10%, var(--surface-soft)); color: var(--accent); }
+.tool-copy { display: grid; min-width: 0; gap: 4px; }
+.tool-copy strong { overflow: hidden; color: inherit; font-size: 12px; font-weight: 650; letter-spacing: -.01em; text-overflow: ellipsis; white-space: nowrap; }
+.tool-copy small { overflow: hidden; color: var(--muted-dim); font-size: 9.5px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.active-chevron { color: var(--muted-dim); font-size: 18px; opacity: 0; transform: translateX(-3px); transition: opacity .18s, transform .18s; }
+.app-shell .tool-navigation > button.active .active-chevron { color: var(--accent); opacity: 1; transform: translateX(0); }
+
+.navigation-footer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: auto;
+  padding: 14px 10px 2px;
+  border-top: 1px solid var(--border);
+}
+.navigation-footer > div { display: grid; gap: 3px; }
+.navigation-footer strong { color: var(--text-soft); font-size: 10px; font-weight: 650; }
+.navigation-footer small { color: var(--muted-dim); font-size: 9px; }
+
+.app-shell main {
+  width: min(1160px, calc(100% - 72px));
+  max-width: none;
+  margin: 0 auto;
+  padding: clamp(48px, 7vh, 76px) 0 80px;
+}
+
+.app-shell .intro,
+.app-shell .diff-heading,
+.app-shell .converter-heading,
+.app-shell .tool-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(250px, .6fr);
+  gap: 64px;
+  align-items: end;
+  margin-bottom: 36px !important;
+}
+
+.app-shell .eyebrow,
+.app-shell .diff-eyebrow,
+.app-shell .converter-eyebrow {
+  margin: 0 0 14px;
+  font: 700 10px/1 var(--font-mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.app-shell h1,
+.app-shell .diff-tool h1,
+.app-shell .converter-section h2,
+.app-shell .tool-heading h1 {
+  max-width: 780px;
+  margin: 0;
+  color: var(--text) !important;
+  font-family: var(--font-sans);
+  font-size: clamp(42px, 5.2vw, 66px) !important;
+  font-weight: 630;
+  letter-spacing: -.06em;
+  line-height: .98 !important;
+  white-space: normal;
+}
+
+.app-shell h1 em,
+.app-shell .diff-tool h1 em,
+.app-shell .tool-heading h1 em,
+.app-shell .converter-section h2 span {
+  color: var(--muted) !important;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 450;
+  letter-spacing: inherit;
+}
+
+.app-shell .intro-copy,
+.app-shell .diff-heading > p,
+.app-shell .converter-heading > p,
+.app-shell .tool-heading > p {
+  max-width: 340px;
+  margin: 0 0 2px;
+  color: var(--muted) !important;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Shared premium card language */
+.app-shell .workspace,
+.app-shell .converter-grid,
+.app-shell .diff-input-card,
+.app-shell .diff-result,
+.app-shell .generator-card,
+.app-shell .timestamp-converter,
+.app-shell .codec-card,
+.app-shell .regex-card,
+.app-shell .cleaner-card {
+  overflow: hidden;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg);
+  background: var(--surface) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.app-shell .toolbar,
+.app-shell .workspace-footer,
+.app-shell .pane-header,
+.app-shell .pane-footer,
+.app-shell .diff-actions,
+.app-shell .result-header,
+.app-shell .result-label,
+.app-shell .pane-title,
+.app-shell .generator-card header,
+.app-shell .generator-card footer,
+.app-shell .timestamp-converter > header,
+.app-shell .codec-pane header,
+.app-shell .codec-card > footer,
+.app-shell .pattern-row,
+.app-shell .regex-pane header,
+.app-shell .cleaner-pane header,
+.app-shell .cleaner-card > footer {
+  border-color: var(--border) !important;
+  background: var(--surface-strong) !important;
+}
+
+.app-shell .toolbar { min-height: 66px; padding: 11px 14px 11px 18px; }
+.app-shell .tool-button,
+.app-shell .quiet-button,
+.app-shell .pane-actions button,
+.app-shell .send-button,
+.app-shell .codec-pane header button,
+.app-shell .cleaner-pane header button,
+.app-shell .codec-card > footer button {
+  border-radius: var(--radius-sm);
+  color: var(--muted) !important;
+  transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.app-shell .tool-button:hover,
+.app-shell .quiet-button:hover,
+.app-shell .pane-actions button:hover,
+.app-shell .send-button:hover,
+.app-shell .codec-pane header button:hover,
+.app-shell .cleaner-pane header button:hover,
+.app-shell .codec-card > footer button:hover {
+  border-color: var(--border) !important;
+  background: var(--surface-hover) !important;
+  color: var(--text) !important;
+}
+
+.app-shell .repair-button,
+.app-shell .compare-button,
+.app-shell .test-button,
+.app-shell .result-box button {
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 15%, transparent);
+  transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.app-shell .repair-button:hover:not(:disabled),
+.app-shell .compare-button:hover,
+.app-shell .test-button:hover,
+.app-shell .result-box button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 88%, white) !important;
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--accent) 22%, transparent);
+  transform: translateY(-1px);
+}
+.app-shell .repair-button:active:not(:disabled),
+.app-shell .compare-button:active,
+.app-shell .test-button:active,
+.app-shell .result-box button:active:not(:disabled) { transform: translateY(0) scale(.985); }
+.app-shell button:disabled { opacity: .48; cursor: not-allowed !important; box-shadow: none !important; transform: none !important; }
+
+.app-shell .editor-frame { height: 450px; background: var(--surface-soft) !important; }
+.app-shell .clear-button { top: 16px; right: 16px; width: 30px; height: 30px; border-radius: 9px; background: var(--surface-hover); color: var(--muted); transition: color .18s, background .18s, transform .18s; }
+.app-shell .clear-button:hover { background: color-mix(in srgb, var(--danger) 12%, var(--surface-hover)); color: var(--danger); transform: rotate(4deg); }
+.app-shell .workspace-footer { min-height: 74px; padding: 14px 20px; }
+.app-shell .status-icon { width: 30px; height: 30px; }
+.app-shell .valid .status-icon { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+.app-shell .invalid .status-icon { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); }
+.app-shell .validation-status strong { color: var(--text-soft) !important; font-size: 12px; }
+.app-shell .validation-status span:not(.status-icon) { color: var(--muted-dim) !important; }
+.app-shell .document-stats { color: var(--muted-dim) !important; font-family: var(--font-mono); }
+
+.app-shell .error-detail,
+.app-shell .repair-report {
+  overflow: hidden;
+  margin-top: 14px;
+  border-radius: var(--radius-md);
+}
+.app-shell .error-detail { border-color: color-mix(in srgb, var(--danger) 24%, var(--border)); background: color-mix(in srgb, var(--danger) 5%, var(--surface)); }
+.app-shell .repair-report { border-color: color-mix(in srgb, var(--accent) 22%, var(--border)); background: color-mix(in srgb, var(--accent) 5%, var(--surface)); }
+.app-shell .shortcut-hint { margin-top: 22px; color: var(--muted-dim); }
+.app-shell .shortcut-hint kbd { border-color: var(--border); border-radius: 6px; background: var(--surface-soft); color: var(--muted); box-shadow: 0 -1px 0 var(--border-strong) inset; }
+.app-shell .toast,
+.app-shell .converter-message { border: 1px solid var(--border-strong) !important; border-radius: 12px; background: color-mix(in srgb, var(--surface-strong) 92%, transparent) !important; color: var(--text) !important; box-shadow: var(--shadow-float) !important; backdrop-filter: blur(18px); }
+
+/* Editors and form fields */
+.app-shell .code-editor,
+.app-shell .code-editor .cm-editor,
+.app-shell .converter-pane,
+.app-shell .diff-textarea,
+.app-shell .codec-pane,
+.app-shell .codec-pane textarea,
+.app-shell .regex-pane textarea,
+.app-shell .highlighted-text,
+.app-shell .empty-result,
+.app-shell .cleaner-pane textarea,
+.app-shell .result-box,
+.app-shell .diff-content {
+  background: var(--surface-soft) !important;
+  color: var(--text-soft) !important;
+}
+.app-shell .code-editor .cm-content { padding-top: 26px; }
+.app-shell textarea::placeholder,
+.app-shell input::placeholder,
+.app-shell .code-editor .cm-placeholder { color: var(--muted-dim) !important; opacity: .75; }
+.app-shell input { border-radius: var(--radius-sm); }
+.app-shell .pattern-input,
+.app-shell .conversion-input,
+.app-shell .generator-card footer input {
+  border-color: var(--border) !important;
+  border-radius: 9px;
+  background: var(--surface-soft) !important;
+  transition: border-color .18s, box-shadow .18s;
+}
+.app-shell .pattern-input:focus-within,
+.app-shell .conversion-input:focus-within { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 9%, transparent); }
+
+/* Tool-specific surfaces */
+.app-shell .converter-controls,
+.app-shell .input-divider,
+.app-shell .codec-actions,
+.app-shell .cleaner-arrow,
+.app-shell .conversion-direction { border-color: var(--border) !important; background: var(--bg-elevated) !important; color: var(--muted-dim) !important; }
+.app-shell .converter-controls button,
+.app-shell .codec-actions button,
+.app-shell .flag-switches button,
+.app-shell .generator-card footer button {
+  border-color: var(--border) !important;
+  border-radius: 9px;
+  background: var(--surface-strong) !important;
+  color: var(--muted) !important;
+  transition: border-color .18s, color .18s, background .18s, transform .18s;
+}
+.app-shell .converter-controls button:hover,
+.app-shell .codec-actions button:hover,
+.app-shell .flag-switches button:hover,
+.app-shell .generator-card footer button:hover { border-color: var(--border-strong) !important; background: var(--surface-hover) !important; color: var(--text) !important; transform: translateY(-1px); }
+.app-shell .codec-actions button.active { border-color: color-mix(in srgb, var(--orange) 42%, var(--border)) !important; background: color-mix(in srgb, var(--orange) 7%, var(--surface-strong)) !important; color: var(--text) !important; }
+.app-shell .flag-switches button.active { border-color: color-mix(in srgb, var(--teal) 42%, var(--border)) !important; background: color-mix(in srgb, var(--teal) 9%, var(--surface-strong)) !important; color: var(--teal) !important; }
+
+.app-shell .generator-grid { gap: 14px; }
+.app-shell .generator-card { border-radius: 15px; transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.app-shell .generator-card:hover { border-color: var(--border-strong) !important; box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 28px 65px rgba(0,0,0,.28) !important; transform: translateY(-3px); }
+.app-shell .generator-card header { min-height: 66px; }
+.app-shell .generator-card header strong,
+.app-shell .generator-card > code,
+.app-shell .timestamp-list code,
+.app-shell .timestamp-converter > header strong,
+.app-shell .conversion-results code { color: var(--text-soft) !important; }
+.app-shell .timestamp-converter { margin-top: 18px; }
+.app-shell .conversion-results { overflow: hidden; border-radius: 9px; background: var(--border) !important; }
+.app-shell .conversion-results button { background: var(--surface-strong) !important; }
+.app-shell .timestamp-list button { border-radius: 6px; transition: background .18s; }
+.app-shell .timestamp-list button:hover { background: var(--surface-hover); }
+
+.app-shell .highlighted-text .match { border-radius: 3px; background: color-mix(in srgb, var(--teal) 18%, transparent) !important; color: color-mix(in srgb, var(--teal) 80%, white) !important; }
+.app-shell .diff-content .removed { border-radius: 3px; background: color-mix(in srgb, var(--danger) 18%, transparent) !important; color: color-mix(in srgb, var(--danger) 76%, white) !important; }
+.app-shell .diff-content .added { border-radius: 3px; background: color-mix(in srgb, var(--accent) 17%, transparent) !important; color: color-mix(in srgb, var(--accent) 76%, white) !important; }
+.app-shell .result-box code { color: var(--accent) !important; }
+
+@media (max-width: 1050px) {
+  .app-shell { grid-template-columns: 220px minmax(0, 1fr); }
+  .app-shell main { width: min(100% - 44px, 1040px); }
+  .app-shell .intro, .app-shell .diff-heading, .app-shell .converter-heading, .app-shell .tool-heading { gap: 40px; }
+}
+
+@media (max-width: 800px) {
+  .app-shell { display: block; }
+  .app-shell .topbar { position: sticky; height: 68px; padding: 0 18px; }
+  .app-shell .tool-navigation {
+    position: sticky;
+    z-index: 19;
+    top: 68px;
+    width: 100%;
+    height: 64px;
+    flex-direction: row;
+    gap: 7px;
+    overflow: auto hidden;
+    padding: 9px 14px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(18px) saturate(130%);
+    scrollbar-width: none;
+  }
+  .app-shell .tool-navigation::-webkit-scrollbar { display: none; }
+  .navigation-label, .navigation-footer { display: none; }
+  .app-shell .tool-navigation > button { min-width: max-content; min-height: 44px; grid-template-columns: 26px auto; gap: 8px; padding: 5px 11px 5px 7px; border-radius: 10px; }
+  .app-shell .tool-glyph { width: 26px; height: 26px; border-radius: 7px; font-size: 9px; }
+  .tool-copy { display: block; }
+  .tool-copy strong { font-size: 11px; }
+  .tool-copy small, .active-chevron { display: none; }
+  .app-shell main { width: min(100% - 32px, 720px); padding: 42px 0 64px; }
+  .app-shell .intro, .app-shell .diff-heading, .app-shell .converter-heading, .app-shell .tool-heading { grid-template-columns: 1fr; gap: 16px; margin-bottom: 28px !important; }
+  .app-shell .intro-copy, .app-shell .diff-heading > p, .app-shell .converter-heading > p, .app-shell .tool-heading > p { max-width: 560px; }
+  .app-shell h1, .app-shell .diff-tool h1, .app-shell .converter-section h2, .app-shell .tool-heading h1 { font-size: clamp(36px, 9.5vw, 52px) !important; }
+  .app-shell .workspace, .app-shell .converter-grid, .app-shell .diff-input-card, .app-shell .diff-result, .app-shell .codec-card, .app-shell .regex-card, .app-shell .cleaner-card { border-radius: 15px; }
+}
+
+@media (max-width: 560px) {
+  .brand-copy small, .app-shell .privacy-note { display: none; }
+  .app-shell .header-actions { gap: 8px; }
+  .app-shell main { width: min(100% - 24px, 520px); padding-top: 34px; }
+  .app-shell .toolbar { gap: 8px; padding: 10px; }
+  .app-shell .toolbar-group { width: 100%; }
+  .app-shell .tool-button { min-width: 0; flex: 1; justify-content: center; padding: 0 8px; }
+  .app-shell .repair-button { flex: 1.25; justify-content: center; }
+  .app-shell .editor-frame { height: 390px; }
+  .app-shell .workspace-footer { gap: 12px; padding: 13px 14px; }
+  .app-shell .document-stats { gap: 11px; padding-left: 41px; }
+  .app-shell .generator-grid { gap: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
