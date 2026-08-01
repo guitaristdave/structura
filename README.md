@@ -110,6 +110,16 @@ npm run dev
 | `npm run preview` | Локальный просмотр production-сборки |
 | `npm test` | Запуск всех модульных тестов |
 
+## Публикация на GitHub Pages
+
+Проект настроен для публикации по адресу:
+
+`https://guitaristdave.github.io/structura/`
+
+Workflow `.github/workflows/deploy.yml` запускает тесты, собирает приложение и
+публикует `dist/` после каждого push в ветку `main`. В настройках репозитория
+GitHub необходимо один раз выбрать `Settings → Pages → Source → GitHub Actions`.
+
 ## Структура проекта
 
 ```text
